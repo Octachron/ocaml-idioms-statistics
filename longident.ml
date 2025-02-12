@@ -90,10 +90,11 @@ end
 
 let analyze (it:Ast_iterator.iterator) x =
   let tool_name = "longident-statistic" in
-  match Filename.extension x with
+  try match Filename.extension x with
   | ".mli" -> it.signature it (Pparse.parse_interface ~tool_name x)
   | ".ml" -> it.structure it (Pparse.parse_implementation ~tool_name x)
   | _ -> ()
+  with Syntaxerr.Error _ -> ()
 
 let average h =
   let m0, m1 = Hashtbl.fold (fun k x (m0,m1) -> m0 + x, m1 + k * x) h (0,0) in
